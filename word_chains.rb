@@ -39,22 +39,24 @@ class WordChainer
     @all_seen_words =[source]
 
     until @current_words.empty?
-      @debugger
-      new_current_words = []
-      adjacent = []
-
-      @current_words.each do |fill_adj|
-        adjacent = self.adjacent_words(fill_adj)
-        adjacent.each do |new_adj|
-          if !@all_seen_words.include?(new_adj)
-            new_current_words << new_adj
-            @all_seen_words << fill_adj
-          end
-        end
-      end
-
-      @current_words = new_current_words
+      explore_current_words
     end
   end
 
+  def explore_current_words
+    new_current_words = []
+    adjacent = []
+
+    @current_words.each do |fill_adj|
+      adjacent = self.adjacent_words(fill_adj)
+      adjacent.each do |new_adj|
+        if !@all_seen_words.include?(new_adj)
+          new_current_words << new_adj
+          @all_seen_words << fill_adj
+        end
+      end
+    end
+
+    @current_words = new_current_words
+  end
 end
