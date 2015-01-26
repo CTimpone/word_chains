@@ -10,6 +10,17 @@ class WordChainer
     @dictionary = Set.new(@dictionary)
   end
 
+  def run(source, target)
+    @current_words = [source]
+    @all_seen_words = {source => nil}
+
+    until @current_words.empty?
+      explore_current_words(target)
+    end
+
+    build_path(target)
+  end
+
   def adjacent_words(word)
     len = word.length
     @dictionary = @dictionary.select {|entry| entry.length == len}
@@ -34,18 +45,7 @@ class WordChainer
     adjacent.uniq
   end
 
-  def run(source, target)
-    @current_words = [source]
-    @all_seen_words = {source => nil}
-
-    until @current_words.empty?
-      explore_current_words
-    end
-
-    p @all_seen_words
-  end
-
-  def explore_current_words
+  def explore_current_words(target)
     new_current_words = []
     adjacent = []
 
@@ -62,5 +62,16 @@ class WordChainer
     @current_words = new_current_words
   end
 
-  p @all_seen_words
+  def build_path(target)
+    arr = [target]
+    val = @all_seen_words[target]
+
+    until arr.last == nil
+      arr << val
+      val = @all_seen_words[val]
+    end
+
+    arr.take(arr.length - 1).reverse
+  end
+
 end
